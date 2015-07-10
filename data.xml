@@ -1,0 +1,65 @@
+<data>
+    <metal name="iron">
+        <symbol>♂</symbol>
+        <color>163,127,127</color>
+    </metal>
+    <metal name="silver">
+        <symbol>☽</symbol>
+        <color>0,127,255</color>
+    </metal>
+    <metal name="gold">
+        <symbol>☉</symbol>
+        <color>255,200,0</color>
+    </metal>
+    <metal name="lead">
+        <symbol>♄</symbol>
+        <color>127,0,255</color>
+    </metal>
+    <metal name="copper">
+        <symbol>♀</symbol>
+        <color>255,63,63</color>
+    </metal>
+    <metal name="mercury">
+        <symbol>☿</symbol>
+        <color>127,63,0</color>
+    </metal>
+    <metal name="tin">
+        <symbol>♃</symbol>
+        <color>63,63,127</color>
+    </metal>
+    <solvent name="water">
+        <symbol>▽</symbol>
+        <color>0,63,255</color>
+        <temp>240-373</temp>
+        <press>0.3-3</press>
+        <creature>protohuman</creature>
+    </solvent>
+    <solvent name="methane">
+        <symbol>↟</symbol>
+        <color>0,127,127</color>
+        <temp>100-240</temp>
+        <press>0.1-1.2</press>
+        <creature>frost golem</creature>
+    </solvent>
+    <solvent name="oxygen">
+        <symbol>☴</symbol>
+        <color>0,127,127</color>
+        <temp>0-100</temp>
+        <press>1-5</press>
+        <creature>airwhale</creature>
+    </solvent>
+    <solvent name="sulfur">
+        <symbol>↭</symbol>
+        <color>127,255,0</color>
+        <temp>373-580</temp>
+        <press>0.5-4</press>
+        <creature>flame lord</creature>
+    </solvent>
+    <solvent name="silicon">
+        <symbol>⇟</symbol>
+        <color>0,255,127</color>
+        <temp>580-2000</temp>
+        <press>2-12</press>
+        <creature>magmatic</creature>
+    </solvent>
+</data>
