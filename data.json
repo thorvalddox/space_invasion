@@ -1,0 +1,204 @@
+{
+  "metals" :
+  {
+    "gold":
+    {
+      "key":"G",
+      "color": [255,200,0]
+    },
+    "silver":
+    {
+      "key":"S",
+      "color": [0,127,255]
+    },
+    "iron":
+    {
+      "key":"I",
+      "color": [163,127,127]
+    },
+    "copper":
+    {
+      "key":"C",
+      "color": [255,63,63]
+    },
+    "tin":
+    {
+      "key":"T",
+      "color": [63,63,127]
+    },
+    "lead":
+    {
+      "key":"L",
+      "color": [127,0,255]
+    },
+    "mercury":
+    {
+      "key":"M",
+      "color": [127,63,0]
+    }
+  },
+  "solvents" :
+  {
+    "oxygen":
+    {
+      "key":"A",
+      "color":[127,255,255],
+      "temp": [0,100],
+      "press": [1,5],
+      "creature": "airwhale",
+      "creature_color": [255,255,255]
+    },
+    "methane":
+    {
+      "key":"F",
+      "color":[127,0,127],
+      "temp": [100,240],
+      "press": [0.1,1.2],
+      "creature": "frost golem",
+      "creature_color": [63,192,255]
+    },
+    "water":
+    {
+      "key":"H",
+      "color":[0,127,255],
+      "temp": [240,380],
+      "press": [0.3,3],
+      "creature": "protohuman",
+      "creature_color": [127,127,127]
+    },
+        "sulfur":
+    {
+      "key":"L",
+      "color":[200,255,0],
+      "temp": [380,590],
+      "press": [0.5,4],
+      "creature": "flame lord",
+      "creature_color": [255,255,0]
+    },
+        "silicium":
+    {
+      "key":"S",
+      "color":[255,127,127],
+      "temp": [590,2000],
+      "press": [2,12],
+      "creature": "magma giant",
+      "creature_color": [255,0,0]
+    }
+  },
+  "plans" :
+  {
+    "empty":
+    {
+      "key":"",
+      "action":0,
+      "cost": {}
+    }   ,
+    "city": {
+      "key": "C",
+      "action": 1,
+      "cost": {
+        "I": 500,
+        "S": 300,
+        "T": 200
+      }
+    },
+    "mines": {
+      "key": "M",
+      "action": 2,
+      "cost": {
+        "C": 300,
+        "M": 500,
+        "I": 200
+      }
+    },
+    "trade station": {
+      "key": "T",
+      "action": 3,
+      "cost": {
+        "S": 300,
+        "G": 500,
+        "C": 200
+      }
+    },
+    "lauchpad": {
+      "key": "L",
+      "action": 4,
+      "cost": {
+        "S": 500,
+        "L": 300,
+        "T": 200
+      }
+    },
+    "sentry": {
+      "key": "S",
+      "action": 5,
+      "cost": {
+        "L": 500,
+        "I": 300,
+        "C": 200
+      }
+    }
+  },
+  "ships": {
+    "battleship" : {
+      "key": "B",
+      "color": [255,0,0],
+      "power": 4,
+      "defence": 4,
+      "build" : 0,
+      "cost" : {
+        "S": 100,
+        "L": 50,
+        "I": 20
+      }
+    },
+    "warship" : {
+      "key" : "W",
+      "color": [255,127,0],
+      "power": 12,
+      "defence": 6,
+      "build" : 0,
+      "cost" : {
+        "C": 400,
+        "M": 300,
+        "L": 40
+      }
+    },
+    "coloniser" : {
+      "key": "C",
+      "color": [0,127,0],
+      "power": 2,
+      "defence": 2,
+      "build" : 1,
+      "cost" : {
+        "G": 500,
+        "S": 500,
+        "C": 500
+      }
+    },
+    "protector" : {
+      "key": "P",
+      "color": [0,0,255],
+      "power": 1,
+      "defence": 21,
+      "build" : 0,
+      "cost" : {
+        "C": 400,
+        "M": 300,
+        "L": 40
+      }
+    },
+    "destroyer" : {
+      "key": "D",
+      "color": [0,0,0],
+      "power": 20,
+      "defence": 1,
+      "build" : 0,
+      "cost" : {
+        "M": 400,
+        "T": 300,
+        "C": 40
+      }
+    }
+  }
+}
