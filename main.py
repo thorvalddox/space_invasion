@@ -5,7 +5,7 @@ from core import Star,Team,Graphics,ViewPort,run_update_tick
 from AI import AI
 
 def main():
-    [Star() for _ in range(100)]
+    [Star(800) for _ in range(100)]
     Graphics(ViewPort(), run_update_tick)
     Team(None, "player")
     Team(AI, "enemy 1")

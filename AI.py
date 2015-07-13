@@ -4,16 +4,20 @@ from core import *
 from itertools import chain
 
 class AI:
-    def __init__(self,team):
+    def __init__(self,team,cripple=60):
         self.team = team
         self.ants = [] #ant AI
         self.planets = list(chain(*(s.planets for s in Star.all_)))
+        self.counter = 0
+        self.cripple = cripple
         for p in self.planets:
             if p.owner is self.team:
                 PlanetBuilder(p,self)
     def gametick(self):
-        for i in self.ants:
-            i.gametick()
+        self.counter += 1
+        if not self.counter % self.cripple:
+            for i in self.ants:
+                i.gametick()
 
 
 class PlanetBuilder:
@@ -83,22 +87,21 @@ class PlanetBattler:
         if len(self.goto_list)<3:#+sum(self.planet in (f.begin,f.end) for f in TradeRoute.all_)<3:
             try:
                 t = self.targetlist.pop(0)
-
             except IndexError:
                 print("TARGETTING ERROR")
                 self.master.ants.remove(self)
                 return
             if any(f.target == t and f.start.owner == self.master.team for f in FleetFlying.all_) or \
                 any(f.loc == t and f.owner == self.master.team for f in FleetBattle.all_):
-                print("ALREADY TARGETTED")
+                self.targetlist.append(t)
                 return
             if distance(self.planet.parent,t) > 200:
                 print("TO FAR")
                 return
-            self.goto_list.append(t)
             if t.owner == self.master.team:
-                print("INVALID TARGET")
+                self.targetlist.append(t)
                 return
+            self.goto_list.append(t)
             builder = FleetBuilder(self.planet.structures[3])
             if t.owner is None:
                 print("started claim")
