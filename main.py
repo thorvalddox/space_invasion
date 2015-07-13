@@ -7,7 +7,7 @@ from AI import AI
 def main():
     [Star() for _ in range(100)]
     Graphics(ViewPort(), run_update_tick)
-    Team(AI, "player")
+    Team(None, "player")
     Team(AI, "enemy 1")
     Team(AI, "enemy 2")
     Team(AI, "enemy 3")
