@@ -55,6 +55,7 @@ class Graphics:
         self.view = defaultview
         self.gameupdate = update
         self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("Space Wars")
         self.screen.fill((0, 0, 0))
         self.infoview = pygame.Surface((400, 600))
         self.butview = pygame.Surface((400, 200))
@@ -88,7 +89,7 @@ class Graphics:
                     elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 2:
                         self.view.escape()
                     elif e.type == pygame.MOUSEBUTTONDOWN and e.button == 3:
-                        self.runbuttons(e.pos,right=True)
+                        self.runbuttons(e.pos, right=True)
                     elif e.type == pygame.KEYDOWN:
                         if e.key == pygame.K_ESCAPE:
                             self.view.escape()
@@ -125,9 +126,10 @@ class Graphics:
             if not (0<x<400 and 0<y<400):
                 continue
             pygame.draw.circle(self.screen, s.color, (x,y), 5)
-            for i, (p,(rx,ry)) in enumerate(zip(s.planets,self.planetdisp)):
-                pygame.draw.circle(self.screen, p.teamcolor(), (x + rx, y +ry), 2)
-                self.make_button((x+rx-2,y+ry-2,4,4),p.show,"",p.perform)
+            for i, p  in enumerate(s.planets):
+                px,py = self.find_planet_pos(p)
+                pygame.draw.circle(self.screen, p.teamcolor(), (px,py), 2)
+                self.make_button((px-3,py-3,6,6),p.show,"",p.perform)
             self.make_button((x - 5, y - 5, 10, 10), s.click)
         s = self.find_selected_star()
         if s is not None:
@@ -219,10 +221,7 @@ class Graphics:
         planet = self.find_selected_planet(selection)
         if planet is None:
             return None
-        index= planet.parent.planets.index(planet)
-        x,y = self.relpos(*planet.parent.pos)
-        rx,ry = self.planetdisp[index]
-        return x+rx,y+ry
+        return(self.relpos(*planet.pos))
 
 class ViewPort():  # Used to pass to main as draw object.
     @property
@@ -398,10 +397,10 @@ InfoBar = namedtuple("InfoBar", "value,color")
 
 
 class Planet(ViewPort):
-    all_ = []
 
     def __init__(self, parent, index):
         self.parent = parent
+        self.index = index
         self.mass = lograndom(10 ** -2, 70) * 10 ** index
         self.distance = lograndom(0.03, 0.3) * 10 ** index
         self.metals = OrderedDict((m, random.random() ** 3) for m in metals())
@@ -422,6 +421,7 @@ class Planet(ViewPort):
         self.buildable = self.active_solvent is not None
         self.autofire = True
         self.counter = 0
+        self.pos = self.decide_pos()
 
     def draw(self):
         self.screen.fill((127, 127, 255))
@@ -481,10 +481,11 @@ class Planet(ViewPort):
         self.parent.show()
 
     def gametick(self):
-
-        if all(s.plan == plan("") for s in self.structures):
+        if self.owner is not None and all(s.plan == plan("") for s in self.structures):
             self.owner = None
         self.counter += 1
+
+        self.storage += self.solvents
         for k in self.storage:
             if self.storage[k] > 9999:
                 self.storage[k] = 9999
@@ -512,6 +513,12 @@ class Planet(ViewPort):
             if f.loc == self:
                 yield f
 
+    def decide_pos(self):
+        angle = 2*random.random()*math.pi
+        distance = self.index*5+10
+        return int(math.cos(angle)*distance)+self.parent.pos[0], int(math.sin(angle)*distance)+self.parent.pos[1]
+
+
 
 class Team(ViewPort):
     all_ = []
@@ -520,6 +527,7 @@ class Team(ViewPort):
     def __init__(self, ai=None, name="AI"):
         self.color = [(0, 127, 127), (255, 127, 0), (0, 127, 0), (255, 255, 0), (0, 127, 127)][len(Team.all_)]
         self.name = name
+        self.counter = 0
         Team.all_.append(self)
         if Team.UI_base is None:
             Team.UI_base = self
@@ -548,16 +556,22 @@ class Team(ViewPort):
         pass
 
     def gametick(self):
-        self.check_lose()
+        self.counter += 1
+        if not self.counter % 60:
+            self.check_lose()
         if self.ai is not None:
             self.ai.gametick()
 
     def check_lose(self):
         planets = chain(*(s.planets for s in Star.all_))
         if not any(p.owner == self and any(s.plan == plan("C") for s in p.structures) for p in planets):
+            print(self.name,"lost")
             for p in planets:
                 if p.owner == self:
                     p.owner = None
+            Team.all_.remove(self)
+            if self == Team.UI_base:
+                print("ERROR deleting UI link")
 
 class Structure(ViewPort):
     def __init__(self, parent):
@@ -665,7 +679,7 @@ class Structure(ViewPort):
             yield (k.name, "{:>10.3f} kt".format(self.parent.storage[k]))
 
     def gametick(self):
-        self.parent.storage += self.parent.solvents
+
         if self.plan.index == 0:
             self.health = 0
             return
@@ -738,10 +752,14 @@ class TradeRoute:
     def autoconnect(cls,target):
         planets = chain(*(s.planets for s in Star.all_))
         team = target.owner
-        closest = sorted((p for p in planets if p.owner == team and target != p and
-                          sum(p in (f.begin,f.end) for f in TradeRoute.all_) <= 3),
-                                 key=lambda x:distance(target.parent,x))[0]
-        return cls(closest,target)
+        try:
+            closest = sorted((p for p in planets if p.owner == team and target != p and
+                              sum(p in (f.begin,f.end) for f in TradeRoute.all_) <= 3),
+                                     key=lambda x:distance(target.parent,x))[0]
+            return cls(closest,target)
+        except IndexError:
+            return
+
 
 class FleetBuilder(ViewPort):
     def __init__(self,parent):

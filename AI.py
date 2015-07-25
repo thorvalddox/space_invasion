@@ -4,7 +4,7 @@ from core import *
 from itertools import chain
 
 class AI:
-    def __init__(self,team,cripple=60):
+    def __init__(self,team,cripple=360):
         self.team = team
         self.ants = [] #ant AI
         self.planets = list(chain(*(s.planets for s in Star.all_)))
